@@ -17,6 +17,7 @@ import {
   StringifiedTransactionResponse,
   TransactionResponseWithResult,
   getConfirmationsForChain,
+  ChainProvider,
 } from "@connext/vector-types";
 import {
   bufferify,
@@ -30,7 +31,7 @@ import { Interface } from "@ethersproject/abi";
 import { Signer } from "@ethersproject/abstract-signer";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Contract } from "@ethersproject/contracts";
-import { JsonRpcProvider, TransactionReceipt, TransactionResponse } from "@ethersproject/providers";
+import { TransactionReceipt, TransactionResponse } from "@ethersproject/providers";
 import { keccak256 } from "@ethersproject/keccak256";
 import { Wallet } from "@ethersproject/wallet";
 import { BaseLogger } from "pino";
@@ -47,7 +48,7 @@ export const EXTRA_GAS = 50_000;
 export const BIG_GAS_LIMIT = BigNumber.from(1_000_000); // 1M gas should cover all Connext txs
 
 export const waitForTransaction = async (
-  provider: JsonRpcProvider,
+  provider: ChainProvider,
   transactionHash: string,
   confirmations?: number,
   timeout?: number,
@@ -72,7 +73,7 @@ export class EthereumChainService extends EthereumChainReader implements IVector
   };
   constructor(
     private readonly store: IChainServiceStore,
-    chainProviders: { [chainId: string]: JsonRpcProvider },
+    chainProviders: { [chainId: string]: ChainProvider },
     signer: string | Signer,
     log: BaseLogger,
     private readonly defaultRetries = 1,

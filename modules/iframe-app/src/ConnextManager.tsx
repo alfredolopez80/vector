@@ -7,7 +7,7 @@ import {
   EngineParams,
   jsonifyError,
 } from "@connext/vector-types";
-import { ChannelSigner, constructRpcRequest, safeJsonParse } from "@connext/vector-utils";
+import { ChannelSigner, constructRpcRequest, parseProviders, safeJsonParse } from "@connext/vector-utils";
 import { hexlify } from "@ethersproject/bytes";
 import { entropyToMnemonic } from "@ethersproject/hdnode";
 import { keccak256 } from "@ethersproject/keccak256";
@@ -64,7 +64,7 @@ export default class ConnextManager {
         const ableToMigrate = await this.ableToMigrate(
           storedEntropy,
           chainAddresses ?? config.chainAddresses,
-          chainProviders,
+          parseProviders(chainProviders),
           messagingUrl ?? config.messagingUrl,
         );
         if (ableToMigrate) {
@@ -91,7 +91,7 @@ export default class ConnextManager {
     this.browserNode = await BrowserNode.connect({
       signer,
       chainAddresses: chainAddresses ?? config.chainAddresses,
-      chainProviders,
+      chainProviders: parseProviders(chainProviders),
       logger: pino(),
       messagingUrl: messagingUrl ?? config.messagingUrl,
       authUrl: config.authUrl,
